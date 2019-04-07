@@ -2,6 +2,8 @@ import fs, { read } from 'fs';
 import path from 'path';
 import socket from 'socket.io';
 
+import state from './state';
+
 const CHUNK_SIZE = 1024 * 10 * 2000;
 
 const assetPath = path.resolve(process.cwd(), 'assets');
@@ -9,19 +11,37 @@ const filePath = path.resolve(assetPath, 'trojan2.webm');
 const stat = fs.statSync(filePath);
 const fileSize = stat.size;
 
+let fakeVideoCount = 0;
+
 export function configureSocket(server, app) {
   const io = socket(server);
-  io.on('connection', (client) => { 
+  io.on('connection', (client) => {
     client.on('disconnect', () => {
       console.log('socket disconnected');
     });
   });
 
+  app.get('/apis/fake-video', (req, res) => {
+    setInterval(() => {
+      console.log('[socket] fake-video shouldSend?: %s', state.shouldEmitVideo);
+
+      if (state.shouldEmitVideo) {
+        io.sockets.emit('fake-video', fakeVideoCount++, true);
+      } else {
+        io.sockets.emit('fake-video', fakeVideoCount, false);
+      }
+    }, 1000);
+
+    res.send({
+      fakeVideo: 'sent',
+    })
+  })
+
   app.get('/video', (req, res, next) => {
     sendFileChunk(io.sockets);
 
     res.send({
-      a: 1,
+      video: 'sent',
     });
   });
 }

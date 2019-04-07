@@ -4,6 +4,7 @@ import express from 'express';
 import http from 'http';
 
 import { configureSocket } from './socket';
+import { handshake, pay, paySucceed } from '@@apis/iota';
 import { video } from '@@apis/apis';
 
 const port: number = 4001;
@@ -13,6 +14,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(htmlLogger);
 app.use(cors());
+
+app.post('/apis/handshake', handshake);
+app.post('/apis/pay', pay);
+app.post('/apis/pay-succeed', paySucceed);
 
 // app.get('/video', video);
 

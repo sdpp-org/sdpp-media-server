@@ -1,5 +1,7 @@
 console.log('Launching the app...');
 
+require('@babel/polyfill');
+
 require('@babel/register')({
   extensions: [
     '.js',
