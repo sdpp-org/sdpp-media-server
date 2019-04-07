@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 app.use(htmlLogger);
 app.use(cors());
 
-app.get('/video', video);
+// app.get('/video', video);
 
 const server = http.createServer(app);
 configureSocket(server, app);
