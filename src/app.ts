@@ -1,7 +1,9 @@
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import express from 'express';
+import http from 'http';
 
+import { configureSocket } from './socket';
 import { video } from '@@apis/apis';
 
 const port: number = 4001;
@@ -12,9 +14,12 @@ app.use(bodyParser.json());
 app.use(htmlLogger);
 app.use(cors());
 
-app.use('/video', video);
+app.get('/video', video);
 
-app.listen(4001, () => {
+const server = http.createServer(app);
+configureSocket(server, app);
+
+server.listen(4001, () => {
   console.log('App is listening %s', port);
 });
 
