@@ -23,7 +23,7 @@ export function configureSocket(server, app) {
 
   app.get('/apis/fake-video', (req, res) => {
     setInterval(() => {
-      console.log('[socket] fake-video shouldSend?: %s', state.shouldEmitVideo);
+      // console.log('[socket] fake-video shouldSend?: %s', state.shouldEmitVideo);
 
       if (state.shouldEmitVideo) {
         io.sockets.emit('fake-video', fakeVideoCount++, true);

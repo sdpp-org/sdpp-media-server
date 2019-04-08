@@ -44,7 +44,9 @@ export function pay(req, res, next) {
   state.shouldEmitVideo = false;
 
   res.send({
-    pay: 'fail',
+    paymentResult: {
+      status: 'fail',
+    },
   });
 }
 
@@ -73,19 +75,15 @@ export function paySucceed(req, res, next) {
       // Send bundle to node.
       const response = await iota.sendTrytes(trytes, 3, 9)
 
-      console.log('Completed TXs');
+      console.log('Completed Transaction', response[0]);
 
       state.shouldEmitVideo = true;
 
       res.send({
-        response,
+        paymentResult: response[0],
       });
     } catch (e) {
       console.log(e);
     }
   })();
-
-  res.send({
-    pay: 'succees',
-  });
 }
